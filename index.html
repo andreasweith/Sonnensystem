@@ -101,24 +101,24 @@ body>#hb{position:fixed;z-index:4;pointer-events:auto;display:grid;grid-template
 #hb button{background:linear-gradient(180deg,rgba(var(--c),.26),rgba(var(--c),.08));color:rgba(255,246,210,.95);border:1px solid rgba(var(--c),.6);border-radius:10px;padding:9px 14px;font-size:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 10px rgba(var(--c),.18)}
 body>#help{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.32);pointer-events:auto;display:block}
 #help[hidden]{display:none}
-.hpg{position:absolute;inset:14px;overflow:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(160deg,#fffbe0,#fff3c0);border:4px solid #c8a02c;border-radius:20px;box-shadow:0 0 0 2px #fff4c4 inset,0 10px 40px rgba(0,0,0,.6);padding:1.2em 1.7em 1.4em;color:#35290f;font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;font-size:clamp(16px,2.25vmin,24px);line-height:1.5}
-@media (orientation:landscape){.hpg{font-size:clamp(16px,2.3vmin,28px)}}
+.hpg{position:absolute;inset:14px;overflow:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(160deg,#fffbe0,#fff3c0);border:4px solid #c8a02c;border-radius:20px;box-shadow:0 0 0 2px #fff4c4 inset,0 10px 40px rgba(0,0,0,.6);padding:1.2em 1.7em 1.4em;color:#35290f;font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;font-size:clamp(14px,1.95vmin,21px);line-height:1.5}
+@media (orientation:landscape){.hpg{font-size:clamp(14px,2vmin,24px)}}
 #hx{position:absolute;top:10px;right:12px;width:44px;height:44px;border-radius:22px;padding:0;font-size:22px;line-height:1;background:rgba(200,160,44,.18);color:#6b4f0a;border:1.5px solid #c8a02c;box-shadow:none}
 .hpg header{margin:0 0 .9em;padding-right:56px}
-.hpg h2{margin:0;font:700 1.95em/1.1 Georgia,"Palatino Linotype",Palatino,serif;letter-spacing:.2px;color:#4a3608}
-.hpg header p{margin:.2em 0 0;font:italic 1em Georgia,serif;color:#8a6b1c}
-.hcols{columns:15em;column-gap:1.3em}
+.hpg h2{margin:0;font-size:1.6em;font-weight:700;line-height:1.1;letter-spacing:.2px;color:#4a3608}
+.hpg header p{margin:.2em 0 0;font-style:italic;color:#8a6b1c}
+.hcols{columns:19em;column-gap:1.3em}
 .hs{break-inside:avoid;margin:0 0 .85em;padding:.6em .85em .65em;background:rgba(255,255,255,.5);border:1px solid rgba(160,125,30,.28);border-left:6px solid rgb(var(--c,160,125,30));border-radius:11px}
-.hs h3{margin:0 0 .35em;font:700 1.2em Georgia,"Palatino Linotype",serif;color:#4a3608}
+.hs h3{margin:0 0 .4em;font-size:1em;font-weight:700;color:#4a3608}
 .hs ul{margin:0;padding:0;list-style:none}
 .hs li{position:relative;padding-left:1.05em;margin:.2em 0}
 .hs li::before{content:"•";position:absolute;left:3px;color:#a98320;font-weight:700}
 .hs .sub{margin:3px 0 4px 8px}.hs .sub li::before{content:"–";left:2px}
-.hs .cat{margin:8px 0 3px;font-weight:500}.hs .cat:first-of-type{margin-top:2px}
-.kc{display:inline-block;padding:1px 12px;border-radius:9px;background:rgb(var(--c));color:#1b1405;border:1px solid rgba(0,0,0,.28);font:600 .97em -apple-system,system-ui,sans-serif;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-h3 .kc{font-size:1.06em;padding:.1em .9em}
+.hs .cat{margin:8px 0 3px;font-weight:400}.hs .cat .kc{display:table;margin:0 0 .25em}.hs .cat:first-of-type{margin-top:2px}
+.kc{display:inline-block;padding:1px 12px;border-radius:9px;background:rgb(var(--c));color:#1b1405;border:1px solid rgba(0,0,0,.28);font:600 1em/1.35 -apple-system,system-ui,sans-serif;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+h3 .kc{font-size:1em;padding:1px 12px}
 .hs b{font-weight:650;color:#4a3608}
-.hfoot{margin:.4em .1em 0;font-size:.85em;color:#8a6b1c;font-style:italic}
+.hfoot{margin:.4em .1em 0;font-size:1em;color:#8a6b1c;font-style:italic}
 body>#intro{position:fixed;inset:0;width:100%;height:100%;z-index:100;pointer-events:auto;background:#000;touch-action:none;cursor:pointer}
 </style>
 </head>
@@ -777,8 +777,8 @@ placeSl();
 
 function placeHB(){const h=$("hb"),sl2=$("spdw").getBoundingClientRect(),W=innerWidth,H=innerHeight;h.style.right="8px";h.style.bottom="calc(8px + env(safe-area-inset-bottom,0px))";
  const r=h.getBoundingClientRect();
- if(sl2.right>r.left-6&&sl2.left<r.right+6&&sl2.bottom>r.top-6&&sl2.top<r.bottom+6){if(VS)h.style.right=(W-sl2.left+8)+"px";else h.style.bottom=(H-sl2.top+8)+"px"}}
-addEventListener("resize",()=>setTimeout(placeHB,60));
+ if(sl2.right>r.left-6&&sl2.left<r.right+6&&sl2.bottom>r.top-6&&sl2.top<r.bottom+6){if(sl2.height>sl2.width)h.style.right=(W-sl2.left+8)+"px";else h.style.bottom=(H-sl2.top+8)+"px"}}
+addEventListener("resize",()=>setTimeout(placeHB,60));[200,800,1800,3500].forEach(d=>setTimeout(placeHB,d));setInterval(placeHB,700);
 $("bhelp").onclick=()=>{$("help").hidden=false};
 $("hx").onclick=()=>{$("help").hidden=true};
 $("help").addEventListener("pointerdown",e=>{if(e.target.id=="help")$("help").hidden=true});
@@ -999,7 +999,7 @@ function render(t){
  if(ha>0){g.globalAlpha=ha*.8;g.fillStyle="#cfd8ee";g.font=Math.round(Math.min(W,H)*.026)+"px -apple-system,system-ui,sans-serif";g.fillText(t<T_ARR-8?"Antippen zum Überspringen":"Antippen zum Starten",W/2,H-Math.min(W,H)*.05);g.globalAlpha=1}
 }
 let lastR=0;function loop(){if(!playing)return;const now=performance.now(),t=(now-t0)/1000;if(t<T_ARR||now-lastR>=33){lastR=now;render(t)}raf=requestAnimationFrame(loop)}
-function end(){if(!playing)return;playing=false;cancelAnimationFrame(raf);cv.style.transition="opacity .45s";cv.style.opacity="0";setTimeout(()=>{if(!playing)cv.style.display="none"},480)}
+function end(){if(!playing)return;playing=false;cancelAnimationFrame(raf);cv.style.transition="opacity .45s";cv.style.opacity="0";setTimeout(()=>{if(!playing){cv.style.display="none";if(typeof placeHB=="function")placeHB()}},480)}
 function play(){setup();ensure();playing=true;cancelAnimationFrame(raf);cv.style.transition="none";cv.style.opacity="1";cv.style.display="block";t0=performance.now();loop()}
 cv.addEventListener("pointerdown",e=>{e.preventDefault();end()});
 addEventListener("resize",()=>{if(playing)setup()});
