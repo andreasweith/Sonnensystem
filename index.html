@@ -870,14 +870,14 @@ const v3=(x,y,z)=>[x,y,z],sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],dot=(a,b)=>
  nrm=a=>{const l=len(a)||1;return[a[0]/l,a[1]/l,a[2]/l]},crs=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],lerp3=(a,b,t)=>[mix(a[0],b[0],t),mix(a[1],b[1],t),mix(a[2],b[2],t)];
 let QS=1,msAvg=0;let sd=1;const rnd=()=>{sd=(sd*1664525+1013904223)>>>0;return sd/4294967296};
 // ---------- Welt ----------
-const RS=1,RP=.34,PP=[0,-.15,92],TA=9,TB=12,TS=7.5,TL=11,T_PASS=TA+TB,T_X=T_PASS+TS,T_ARR=T_X+TL,Z0=3600,VC=520,DA=Z0-VC*TA*.3714,RHOS=1.10,LA=Math.asinh((DA-RHOS)/1.25),KA=VC/DA,BE=70*D2R,DEL=24*D2R;
+const RS=1,RP=.34,PP=[0,-55,92],PL=[0,-.15,92],TA=9,TB=12,TS=7.5,TL=11,T_PASS=TA+TB,T_X=T_PASS+TS,T_ARR=T_X+TL,Z0=3600,VC=520,DA=Z0-VC*TA*.3714,RHOS=1.10,LA=Math.asinh((DA-RHOS)/1.25),KA=VC/DA,BE=70*D2R,DEL=24*D2R;
 let DF=8,CF=[0,0,0],RPPX=170,PHI0=.35;
 function setup(){
  sc=Math.min(window.devicePixelRatio||1,1.5);W=cv.width=Math.round(innerWidth*sc);H=cv.height=Math.round(innerHeight*sc);
  F=.5*Math.min(W,H)/Math.tan(27*D2R);
  RPPX=Math.min(.45*W/2.19,.45*H/1.89);
  DF=RP*Math.sqrt(1+(F/RPPX)*(F/RPPX));
- PHI0=Math.atan(.9*H/F);const dir=[0,0,-1];CF=[PP[0]+DF*dir[0],PP[1]+DF*dir[1],PP[2]+DF*dir[2]];
+ PHI0=Math.atan(.5*H/F)+7*D2R;const dir=[0,0,-1];CF=[PP[0]+DF*dir[0],PP[1]+DF*dir[1],PP[2]+DF*dir[2]];
 }
 function gcur(tau){const m0=KA*TB/LA,m1=.35,t2=tau*tau,t3=t2*tau;return m0*(t3-2*t2+tau)+(-2*t3+3*t2)+m1*(t3-t2)}
 function trap(u){const a=.1,b=.3;let q;if(u<a)q=u*u/(2*a);else if(u<=1-b)q=a/2+(u-a);else q=a/2+(1-b-a)+(b*b-(1-u)*(1-u))/(2*b);return q/(1-a/2-b/2)}
@@ -890,7 +890,7 @@ function rawPos(t){
  const tt=Math.min(t,T_X),b=betaAt(tt),rho=D+.32*sm(T_X-2.2,T_X,tt);
  const P0=[0,rho*Math.sin(b),-rho*Math.cos(b)];
  if(t<=T_X)return P0;
- const u=clamp((t-T_X)/TL,0,1),g2=trap(u);return[CF[0]*g2+P0[0]*(1-g2),mix(P0[1],CF[1],sm(0,1,Math.pow(u,.6))),mix(P0[2],CF[2],g2)];
+ const u=clamp((t-T_X)/TL,0,1),g2=trap(u);return[CF[0]*g2+P0[0]*(1-g2),mix(P0[1],CF[1],Math.pow(g2,1.12)),mix(P0[2],CF[2],g2)];
 }
 function cam(t){
  let C=[0,0,0];const N=7;for(let j=-3;j<=3;j++){const p=rawPos(clamp(t+j*.2,0,T_ARR+5));C[0]+=p[0]/N;C[1]+=p[1]/N;C[2]+=p[2]/N}
@@ -1102,7 +1102,7 @@ function render(t){
  // Planet
  const vp=sub(PP,c.C),dp=len(vp),pr=proj(c,PP);
  // Licht im Bildschirmsystem (x rechts, y unten, z zum Betrachter) aus der Sonne
- const Lw=nrm(sub([0,0,0],PP)),Lv=[dot(Lw,c.r),-dot(Lw,c.u),-dot(Lw,c.f)];
+ const Lw=nrm(sub([0,0,0],PL)),Lv=[dot(Lw,c.r),-dot(Lw,c.u),-dot(Lw,c.f)];
  let Lf=Lv;{const k=sm(T_ARR-9,T_ARR-1,t),Lt=nrm([-.62,-.22,.75]);Lf=nrm(lerp3(Lv,Lt,k))}
  if(pr){const rpx=F*RP/Math.sqrt(Math.max(.01,dp*dp-RP*RP));{const pa=clamp((rpx-.4)/1.2,0,1)*sm(T_X+1.5,T_X+4.5,t);if(pa>0)drawPlanet(pr[0],pr[1],rpx,t*.13,Lf,pa)}}
  drawSun(c,t);
