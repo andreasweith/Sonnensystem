@@ -819,6 +819,8 @@ addEventListener("resize",()=>setTimeout(placeHB,60));[200,800,1800,3500].forEac
 // Handy: Namen-Buttons einzeilig, bei Platzmangel abgekuerzt
 const NB={n2:["Ekliptik","Ekl."],n1:["Planeten","Plan."],n3:["Zwergpl.","Zwerg"],n4:["Kometen","Kom."],n5:["Raumfahrt","Raum"]};
 function fitNames(){if(!PHN)return;for(const id in NB){const b=$(id);if(!b)continue;b.textContent=NB[id][0];b.style.fontSize="";if(b.scrollWidth>b.clientWidth+1){b.style.fontSize="11px";if(b.scrollWidth>b.clientWidth+1)b.textContent=NB[id][1]}}}
+function fitPB(){if(!PHN)return;const s=$("spdw").getBoundingClientRect(),c=$("ctl").getBoundingClientRect();if(s.height<5||c.height<5)return;const cur=parseFloat(getComputedStyle(document.body).paddingBottom)||0,d=s.top-c.bottom-4;if(Math.abs(d)>1.5)document.body.style.paddingBottom=Math.max(40,cur-d)+"px"}
+addEventListener("resize",()=>setTimeout(fitPB,100));[150,700,1600,3000].forEach(d=>setTimeout(fitPB,d));setInterval(fitPB,900);
 addEventListener("resize",()=>setTimeout(fitNames,80));[100,600,1500].forEach(d=>setTimeout(fitNames,d));
 // ---- Anleitung: Leiterbahnen mit wandernden Lichtsignalen (unsymmetrisch, deterministisch)
 const CIRC={anims:[]};
