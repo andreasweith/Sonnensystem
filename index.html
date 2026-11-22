@@ -138,6 +138,20 @@ body>#help:not([hidden]){display:flex;align-items:center;justify-content:center}
 .hs b{font-weight:650;color:#3d2e06}
 .hfoot{margin:.5em .1em 0;font-size:.9em;color:#5c4509;border-top:1px solid rgba(104,74,10,.35);padding-top:.6em}
 body>#intro{position:fixed;inset:0;width:100%;height:100%;z-index:100;pointer-events:auto;background:#000;touch-action:none;cursor:pointer}
+
+/* ---- Handy (kleine Geraete): Regler unter der Konsole, Anleitung/Intro rechts daneben, Hochformat-Sperre ---- */
+body.ph{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+body.ph #ev{display:none}
+body.ph #ctl{margin-top:auto;max-width:100%;min-width:0;width:auto}
+body.ph>#spdw{left:12px!important;right:auto!important;top:auto!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;width:calc(100% - 24px - 100px - 8px);height:66px;flex-direction:row}
+body.ph>#hb{right:12px!important;left:auto!important;top:auto!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;width:100px;height:66px;grid-template-columns:1fr;grid-template-rows:1fr 1fr;gap:6px}
+body.ph #hb button{padding:0 4px;font-size:14px;height:100%}
+body.ph .sub.sn{flex-wrap:nowrap;gap:3px;padding:5px 3px}
+body.ph .sub.sn button{min-width:0;flex:1 1 0;padding:5px 1px;font-size:12px;white-space:nowrap;overflow:hidden;height:36px}
+#rot{display:none;position:fixed;inset:0;z-index:200;background:#05070f;color:#e2edff;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;font-size:18px;pointer-events:auto;padding:24px}
+#rot i{font-style:normal;font-size:56px}
+body.ph>#rot{position:fixed;inset:0;z-index:200}
+@media (orientation:landscape){body.ph #rot{display:flex}}
 </style>
 </head>
 <body>
@@ -175,7 +189,9 @@ body>#intro{position:fixed;inset:0;width:100%;height:100%;z-index:100;pointer-ev
 </div></div></div>
 <canvas id="intro" style="display:block"></canvas>
 <div id="info" hidden></div>
+<div id="rot"><i>📱</i><div>Bitte das Handy<br>ins Hochformat drehen</div></div>
 <script>
+const PHN=Math.min(screen.width,screen.height)<600;document.body.classList.toggle("ph",PHN);if(PHN)try{screen.orientation.lock("portrait").catch(()=>{})}catch(_){}
 // Bahnelemente (JPL, Näherung 1800–2050): a,da,e,de,I,dI,L,dL,ϖ,dϖ,Ω,dΩ (pro Jahrhundert)
 const P=[
 ["Merkur","#b5b5b5",.38709927,.00000037,.20563593,.00001906,7.00497902,-.00594749,252.2503235,149472.67411175,77.45779628,.16047689,48.33076593,-.12534081],
@@ -207,7 +223,7 @@ let LW=1,TS=1,BS=1,BM=false,SEL=null,HITS=[],tp=null;
  Object.defineProperty(cx,"lineWidth",{configurable:true,get(){return A.get.call(cx)},set(v){A.set.call(cx,v*LW)}});
  Object.defineProperty(cx,"font",{configurable:true,get(){return B.get.call(cx)},set(v){B.set.call(cx,String(v).replace(/(\d+(?:\.\d+)?)px/,(m,n)=>(n*TS).toFixed(1)+"px"))}})}
 let CW=innerWidth,CH=innerHeight,CY0=innerHeight/2;
-function size(){const w=Math.round(innerWidth),h=Math.round(innerHeight),d=devicePixelRatio||1;if(w<50||h<50)return;CW=w;CH=h;{const pb=document.getElementById("ctl").offsetHeight+document.getElementById("ev").offsetHeight+24,hb=document.getElementById("hint").getBoundingClientRect().bottom+6;CY0=h>w*1.1?(hb+(h-pb))/2:h/2}cv.style.width=w+"px";cv.style.height=h+"px";cv.width=Math.round(w*d);cv.height=Math.round(h*d);cx.setTransform(d,0,0,d,0,0);draw()}
+function size(){const w=Math.round(innerWidth),h=Math.round(innerHeight),d=devicePixelRatio||1;if(w<50||h<50)return;CW=w;CH=h;{const pb=document.getElementById("ctl").offsetHeight+document.getElementById("ev").offsetHeight+24+(PHN?78:0),hb=document.getElementById("hint").getBoundingClientRect().bottom+6;CY0=h>w*1.1?(hb+(h-pb))/2:h/2}cv.style.width=w+"px";cv.style.height=h+"px";cv.width=Math.round(w*d);cv.height=Math.round(h*d);cx.setTransform(d,0,0,d,0,0);draw()}
 ["resize","orientationchange","pageshow"].forEach(n=>addEventListener(n,()=>{size();setTimeout(size,250);setTimeout(size,900)}));if(window.visualViewport)visualViewport.addEventListener("resize",size);
 const A=P.map(p=>p[2]);
 let AE=[];function evn(r){const A=AE,n=A.length;let i=0;while(i<n-2&&r>A[i+1])i++;return i+1+(r-A[i])/(A[i+1]-A[i])}
@@ -778,7 +794,7 @@ cv.addEventListener("pointermove",e=>{if(tp&&Math.hypot(e.clientX-tp[0],e.client
 cv.addEventListener("pointerup",e=>{if(!tp)return;const th=BM?36:28;let b=null,bd=th;HITS.forEach(h=>{const d=Math.hypot(h[0]-e.clientX,h[1]-e.clientY);if(d<bd){bd=d;b=h[2]}});tp=null;SEL=b;if(b!==null&&b>=200&&b<300)FILM={i:b-200,t0:performance.now()};if(b>=300)LP=0;draw()});
 document.getElementById("bm").onchange=e=>{BM=e.target.checked;LW=BM?1.8:1;TS=BM?1.3:1;BS=BM?1.3:1;document.body.classList.toggle("bm",BM);size()};
 
-const SL_L=300,SL_T=84;let SLOT=innerWidth>innerHeight?{e:"b",a:1}:{e:"r",a:1};try{const o=JSON.parse(localStorage.getItem("ssSlot"));if(o&&"tblr".includes(o.e)&&o.e.length==1&&typeof o.a=="number")SLOT=o}catch(_){}
+const SL_L=300,SL_T=84;let SLOT=innerWidth>innerHeight?{e:"b",a:1}:{e:"r",a:1};try{const o=JSON.parse(localStorage.getItem("ssSlot"));if(o&&"tblr".includes(o.e)&&o.e.length==1&&typeof o.a=="number")SLOT=o}catch(_){}if(PHN)SLOT={e:"b",a:0};
 function placeSl(){const e=$("spdw"),st=e.style,vv=SLOT.e=="l"||SLOT.e=="r";VS=vv;e.classList.toggle("v",vv);st.left=st.right=st.top=st.bottom="auto";
  const sa="env(safe-area-inset-bottom,0px)";
  if(vv){st[SLOT.e=="l"?"left":"right"]="8px";st.top="calc(8px + "+SLOT.a+" * (100% - 16px - "+SL_L+"px - "+sa+"))"}
@@ -788,7 +804,7 @@ function placeSl(){const e=$("spdw"),st=e.style,vv=SLOT.e=="l"||SLOT.e=="r";VS=v
  const slotAt=(x,y)=>{const W=innerWidth,H=innerHeight,d={l:x,r:W-x,t:y,b:H-y};let ed="b",m=1e9;for(const k in d)if(d[k]<m){m=d[k];ed=k}
   const vv=ed=="l"||ed=="r",span=(vv?H:W)-16-SL_L;let a=((vv?y:x)-8-SL_L/2)/span;a=Math.max(0,Math.min(1,a));
   if(a*span<50)a=0;else if((1-a)*span<50)a=1;return{e:ed,a:a}};
- e.addEventListener("pointerdown",e2=>{if(e2.target.closest("#fdt"))return;st=[e2.clientX,e2.clientY];clearTimeout(tm);const gp=e2.target.classList.contains("gr");
+ e.addEventListener("pointerdown",e2=>{if(PHN||e2.target.closest("#fdt"))return;st=[e2.clientX,e2.clientY];clearTimeout(tm);const gp=e2.target.classList.contains("gr");
   tm=setTimeout(()=>{mv=true;e.classList.add("mv");try{e.setPointerCapture(e2.pointerId)}catch(_){}try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}},gp?250:450)});
  e.addEventListener("pointermove",e2=>{if(!mv){if(st&&Math.hypot(e2.clientX-st[0],e2.clientY-st[1])>10)clearTimeout(tm);return}
   SLOT=slotAt(e2.clientX,e2.clientY);placeSl()});
@@ -796,10 +812,14 @@ function placeSl(){const e=$("spdw"),st=e.style,vv=SLOT.e=="l"||SLOT.e=="r";VS=v
  ["pointerup","pointercancel"].forEach(n=>e.addEventListener(n,fin));e.addEventListener("contextmenu",e2=>e2.preventDefault())})();
 placeSl();
 
-function placeHB(){const h=$("hb"),sl2=$("spdw").getBoundingClientRect(),W=innerWidth,H=innerHeight;h.style.right="8px";h.style.bottom="calc(8px + env(safe-area-inset-bottom,0px))";
+function placeHB(){if(PHN)return;const h=$("hb"),sl2=$("spdw").getBoundingClientRect(),W=innerWidth,H=innerHeight;h.style.right="8px";h.style.bottom="calc(8px + env(safe-area-inset-bottom,0px))";
  const r=h.getBoundingClientRect();
  if(sl2.right>r.left-6&&sl2.left<r.right+6&&sl2.bottom>r.top-6&&sl2.top<r.bottom+6){if(sl2.height>sl2.width)h.style.right=(W-sl2.left+8)+"px";else h.style.bottom=(H-sl2.top+8)+"px"}}
 addEventListener("resize",()=>setTimeout(placeHB,60));[200,800,1800,3500].forEach(d=>setTimeout(placeHB,d));setInterval(placeHB,700);
+// Handy: Namen-Buttons einzeilig, bei Platzmangel abgekuerzt
+const NB={n2:["Ekliptik","Ekl."],n1:["Planeten","Plan."],n3:["Zwergpl.","Zwerg"],n4:["Kometen","Kom."],n5:["Raumfahrt","Raum"]};
+function fitNames(){if(!PHN)return;for(const id in NB){const b=$(id);if(!b)continue;b.textContent=NB[id][0];b.style.fontSize="";if(b.scrollWidth>b.clientWidth+1){b.style.fontSize="11px";if(b.scrollWidth>b.clientWidth+1)b.textContent=NB[id][1]}}}
+addEventListener("resize",()=>setTimeout(fitNames,80));[100,600,1500].forEach(d=>setTimeout(fitNames,d));
 // ---- Anleitung: Leiterbahnen mit wandernden Lichtsignalen (unsymmetrisch, deterministisch)
 const CIRC={anims:[]};
 function circClear(){CIRC.anims.forEach(x=>{try{x.cancel()}catch(e){}});CIRC.anims=[];const sv=$("circ");while(sv.firstChild)sv.removeChild(sv.firstChild)}
