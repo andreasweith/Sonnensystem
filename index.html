@@ -163,7 +163,7 @@ body>#intro{position:fixed;inset:0;width:100%;height:100%;z-index:100;pointer-ev
 <section class="hs" style="--c:255,252,240"><h3><i class="no">01</i><span class="kc" style="--c:255,252,240">Grundfunktionen</span></h3><ul><li>Kippen und Drehen mit einem Finger</li><li>Zoom mit zwei Fingern</li><li>Objekt antippen: Infofenster</li><li>Schieberegler zur Bewegung in der Zeit, beliebig am Rand verschiebbar (lange auf Griff oder Rahmen drücken)</li></ul></section>
 <section class="hs" style="--c:255,176,64"><h3><i class="no">02</i><span class="kc">Maßstab</span></h3><ul><li>Wechsel zwischen realem, angepasstem und gleichmäßigem Maßstab</li></ul></section>
 <section class="hs" style="--c:90,168,255"><h3><i class="no">03</i><span class="kc">Namen</span></h3>
-<div class="cat"><span class="kc" style="--c:240,205,70">Ekliptik</span> mit Sternbildern: Symbol, Abkürzung, Deutsch</div><ul class="sub"><li><b>Sichtlinien</b> zeigen die Rückwärtsbewegung bei den Oppositionsschleifen</li><li><b>R.A.</b> Koordinaten, Sternzeit</li></ul>
+<div class="cat"><span class="kc" style="--c:240,205,70">Ekliptik</span> mit Sternbildern: Symbol, Abkürzung, Deutsch</div><ul class="sub"><li><b>Sichtlinien</b> zeigen die Rückwärtsbewegung bei den Oppositionsschleifen</li><li><b>R.A.</b> Koordinaten, Sternzeit, mit den Tierkreiszeichen (Widder bei 0h) innen am Ring; sie weichen von den Sternbildern etwa einen Monat ab</li></ul>
 <div class="cat"><span class="kc" style="--c:60,214,200">Planeten</span> Symbol, Name</div><ul class="sub"><li><b>Spuren</b> 1, 2 oder 3 Monate</li></ul>
 <div class="cat"><span class="kc" style="--c:255,125,190">Zwergplaneten</span> Symbol, Name, Asteroiden- und Kuipergürtel</div>
 <div class="cat"><span class="kc" style="--c:160,225,80">Kometen</span> unterschiedlicher Herkunft (Auswahl)</div>
@@ -632,6 +632,9 @@ function draw(){
   for(let h=0;document.getElementById("ra").checked&&h<24;h+=2){const a=h*15*D,r=rho(a),m=q(a,rb);
    it.push([dd(a)+.1,()=>{cx.textAlign="center";cx.textBaseline="middle";cx.lineJoin="round";cx.font="bold "+(10*Math.max(ZS,.85)*(.7+.3*r/hw)).toFixed(1)+"px system-ui";
     cx.strokeStyle="#05070f";cx.lineWidth=3;cx.strokeText(h+"h",m[0],m[1]);cx.fillStyle="#fff";cx.fillText(h+"h",m[0],m[1])}])}
+  // Tierkreiszeichen (Sternzeit, tropisch): Widder bei 0h, alle 2h ein Zeichen, innerhalb des farbigen Rings
+  if(document.getElementById("ra").checked)["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"].forEach((sg,i)=>{const a=i*30*D,r=rho(a),k2=.7+.3*r/hw,fs=18*k2*ZS,m=q(a,rb-r-fs*.62-3);
+   it.push([dd(a)+.1,()=>{cx.textAlign="center";cx.textBaseline="middle";cx.fillStyle="rgba(238,241,250,.96)";cx.font=fs.toFixed(1)+"px 'Apple Symbols','Segoe UI Symbol',system-ui,serif";cx.fillText(sg+"\uFE0E",m[0],m[1])}])});
   // Tierkreis-Sternbilder (Mitte der IAU-Grenzen auf der Ekliptik, ohne Schlangentr\u00e4ger)
   const Z=[["\u2648",41.3],["\u2649",71.95],["\u264A",104.35],["\u264B",128.25],["\u264C",156.2],["\u264D",196],["\u264E",229.45],["\u264F",244.4],["\u2650",283.15],["\u2651",313.65],["\u2652",339.6],["\u2653",10.35]];
   const AB=["Ari","Tau","Gem","Cnc","Leo","Vir","Lib","Sco","Sgr","Cap","Aqr","Psc"],DE=["Widder","Stier","Zwillinge","Krebs","Löwe","Jungfrau","Waage","Skorpion","Schütze","Steinbock","Wassermann","Fische"];
@@ -672,8 +675,8 @@ function draw(){
   if(document.getElementById("los").checked&&MODE==1&&i!=2){const m=QF(Math.atan2(q[1]-earth[1],q[0]-earth[0]),RB),zo=document.getElementById("zod").checked;
    const fe=scale(Math.hypot(earth[0],earth[1],earth[3]))*k/Math.hypot(earth[0],earth[1],earth[3]),fp=scale(Math.hypot(q[0],q[1],q[3]))*k/Math.hypot(q[0],q[1],q[3]);
    const E2=[earth[0]*fe,earth[1]*fe],P2=[q[0]*fp,q[1]*fp],out=zo&&Math.hypot(P2[0],P2[1])>RB;let en=s;
-   if(out){const dx=P2[0]-E2[0],dy=P2[1]-E2[1],A2=dx*dx+dy*dy,B=2*(E2[0]*dx+E2[1]*dy),C=E2[0]*E2[0]+E2[1]*E2[1]-RB*RB,t=(-B+Math.sqrt(Math.max(B*B-4*A2*C,0)))/(2*A2),X=E2[0]+dx*t,Y=E2[1]+dy*t;en=[c[0]+X*cy-Y*sy,c[1]-(X*sy+Y*cy)*ct]}
-   cx.strokeStyle="#ffffff55";cx.lineWidth=1;cx.beginPath();cx.moveTo(ep[0],ep[1]);cx.lineTo(en[0],en[1]);cx.stroke();if(zo&&!out){cx.strokeStyle=p[1];cx.globalAlpha=.85;cx.lineWidth=1.5;cx.beginPath();cx.moveTo(s[0],s[1]);cx.lineTo(m[0],m[1]);cx.stroke();cx.globalAlpha=1}}
+   if(zo){const dx=P2[0]-E2[0],dy=P2[1]-E2[1],A2=dx*dx+dy*dy,B=2*(E2[0]*dx+E2[1]*dy),C=E2[0]*E2[0]+E2[1]*E2[1]-RB*RB,t=(-B+Math.sqrt(Math.max(B*B-4*A2*C,0)))/(2*A2),X=E2[0]+dx*t,Y=E2[1]+dy*t;en=[c[0]+X*cy-Y*sy,c[1]-(X*sy+Y*cy)*ct]}
+   cx.strokeStyle="#ffffff55";cx.lineWidth=1;cx.beginPath();cx.moveTo(ep[0],ep[1]);cx.lineTo(en[0],en[1]);cx.stroke();if(zo&&!out){cx.strokeStyle=p[1];cx.globalAlpha=.85;cx.lineWidth=1.5;cx.beginPath();cx.moveTo(s[0],s[1]);cx.lineTo(en[0],en[1]);cx.stroke();cx.globalAlpha=1}}
   body(i,s[0],s[1],p[1]);
   {const lm=i>=8?DL:PL;if(lm==0){cx.fillStyle="#cdd3e6";cx.font="11px system-ui";cx.fillText(p[0],s[0]+(i==5?rad(i)*2.5:rad(i))+3,s[1]-6)}else if(lm==1){cx.fillStyle="#cdd3e6";csym(i,s[0]+(i==5?rad(i)*2.5:rad(i))+9,s[1]-8)}}
   if(i!=2){const vx=q[0]-earth[0],vy=q[1]-earth[1],sx=-earth[0],sy2=-earth[1];
